@@ -1,0 +1,42 @@
+<h2 class="center-align">Cadastro de destaques</h2>
+<hr>
+<br>
+<div class="row">
+  <div class="col s12 m8 offset-m2">
+    <div class="collection">
+      <a *ngFor="let destaque of destaques" class="collection-item" (click)="onSelectDestaque(destaque)">
+        <b>{{destaque.nome_estabelecimento}}</b>
+        <p style="text-decoration: none">
+          {{destaque.frase}}
+        </p>
+      </a>
+    </div>
+  </div>
+</div>
+
+
+<div id="editDestaque" class="modal" >
+  <div class="modal-content" *ngIf="selectedDestaque">
+    <h4>Editar categoria</h4>
+    <hr>
+    <br>
+    <div class="row">
+      <div class="input-field col s12">
+        <h5 class="center-align">{{selectedDestaque.nome_estabelecimento}}</h5>
+        <hr>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <p *ngIf="!editFrase" (dblclick)="toggleFrase()" >{{selectedDestaque.frase}}</p>
+        <textarea *ngIf="editFrase" class="materialize-textarea" id="text_frase" maxlength="200"  [(ngModel)]="fraseDestaque" > </textarea>
+        <label for="text_frase" class="active">Frase</label>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a class=" btn waves-effect waves-green red darken-1" (click)="deleteDestaque()" >Delete</a>
+    <a class=" modal-action modal-close waves-effect waves-green btn-flat" (click)="updateDestaque()" >Salvar</a>
+  </div>
+</div>
+        

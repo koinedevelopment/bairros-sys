@@ -1,0 +1,80 @@
+<h2 class="center-align">Cadastro de categorias</h2>
+<hr>
+<br>
+<div class="row">
+  <div class="col l6 offset-l3 m8 offset-m2 s11">
+      <div class="row valign-wrapper">
+        <div class="input-field col s5">
+          <input id="nome_categoria" [(ngModel)]="nomeCategoria" type="text" class="validate">
+          <label for="nome_categoria">Nome da categoria</label>
+        </div>
+
+            <div class="file-field input-field col s7">
+              <div class="btn btn-flat">
+                <span>Ícone</span>
+                <input type="file" #icone id="icone" (change)="onChange($event)" >
+              </div>
+              <div class="file-path-wrapper">
+                <input #pathWrapper class="file-path validate" type="text">
+              </div>
+            </div>
+
+        <div class="col l1 m1 s1">
+          <button [disabled]="!selecionouIcone || nomeCategoria == '' " class="btn-floating btn waves-effect waves-light red" (click)="onSubmitCategoria()" ><i class="material-icons">add</i></button>
+        </div>
+      </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col l6 offset-l3 m8 offset-m2 s12">
+    <ul class="collection">
+      <li class="collection-item avatar valign-wrapper" *ngFor="let categoria of categorias">
+        <img [src]="categoria.iconeUrl? categoria.iconeUrl:  'assets/no-photo.png'" alt="" class="circle">
+        <a (click)="onSelectCategoria(categoria)" style="width: 100%">{{categoria.nome}}</a>
+        <div class="secondary-content">
+          <div class="switch" id="ativo" >
+              <label>Validado?</label>
+              <label>
+                <input type="checkbox" [checked]="categoria.ativo" (change)="onChangeAtividade(categoria)" >
+                <span class="lever"></span>
+              </label>
+            </div>
+          </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div id="editCategoria" class="modal">
+  <div class="modal-content">
+    <h4>Editar categoria</h4>
+    <hr>
+    <br>
+    <div class="input-field col s12" *ngIf="selectedCategoria">
+      <input id="nome_edit" [(ngModel)]="selectedCategoria.nome" type="text" class="validate">
+      <label for="nome_edit" class="active">Nome da categoria</label>
+    </div>
+    <div class="row" *ngIf="iconeEdit">
+      <div class="col s12 center-align">
+        <img class="responsive-img" [src]="iconeEdit">
+      </div>
+    </div>
+    <div class="row">
+      <div class="file-field input-field col s12" *ngIf="selectedCategoria">
+        <div class="btn">
+          <span> {{selectedCategoria.iconeUrl? 'Alterar': 'Inserir'}} ícone</span>
+          <input type="file" id="imagemSabor" (change)="onChangeEdit($event)" >
+        </div>
+        <div class="file-path-wrapper">
+          <input class="file-path validate" type="text">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a class=" modal-action modal-close waves-effect waves-green btn-flat" (click)="onSubmitEdit()" >Salvar</a>
+    <button class="btn waves-effect waves-light red" (click)="onDeleteCategoria()" >Excluir</button>
+  </div>
+</div>
+        

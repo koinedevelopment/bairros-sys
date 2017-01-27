@@ -1,0 +1,76 @@
+<h2 class="center-align">Cadastro de estabelecimentos</h2>
+<hr>
+<br>
+<div class="row">
+  <div class="col s12 m8 offset-m2 l6 offset-l3">
+  </div>
+</div>
+<div class="row">
+  <br>
+  <h4 class="center-align" >Estabelecimentos cadastrados</h4>
+  <div *ngIf="carregando" class="center-align">
+    <img src="assets/rolling1.svg">
+  </div>
+  <div class="col s12 m8 offset-m2">
+    <div class="collection">
+      <a *ngFor="let estabelecimento of estabelecimentos" class="collection-item" (click)="onSelectEstabelecimento(estabelecimento)">
+        <b>{{estabelecimento.nome}}</b>
+        <p style="text-decoration: none">
+          Ativo: {{estabelecimento.validado? 'Sim': 'Não'}}<br>
+          Imagem Adicional: {{estabelecimento.temImagemAdicional? 'Sim': 'Não'}}
+        </p>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div id="editEstabelecimento" class="modal" >
+  <div class="modal-content" *ngIf="selectedEstabelecimento">
+    <h4>Editar categoria</h4>
+    <hr>
+    <br>
+    <div class="row">
+      <div class="input-field col s12">
+        <h5 class="center-align">{{selectedEstabelecimento.nome}}</h5>
+        <hr>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s6">
+        <div class="switch" id="imagemAdicional" >
+          <label>Imagem Adicional?</label>
+          <label>
+            <input type="checkbox" [checked]="selectedEstabelecimento.temImagemAdicional" (change)="onChangeImagemAdicional()" >
+            <span class="lever"></span>
+          </label>
+        </div>
+      </div>
+      <div class="col s6">
+        <div class="switch" id="ativo" >
+          <label>Validado?</label>
+          <label>
+            <input type="checkbox" [checked]="selectedEstabelecimento.validado" (change)="onChangeValidade()" >
+            <span class="lever"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col s12">
+        <input type="checkbox" [disabled]="selectedEstabelecimento.destaque" [checked]="destaque" id="check_destaque" #checkbox (change)="onSelectDestaque(checkbox)" />
+        <label for="check_destaque">Tornar Destaque?</label>
+      </div>
+    </div>
+    <div class="row" *ngIf="destaque">
+      <div class="col s12">
+        <textarea class="materialize-textarea" id="text_frase" maxlength="200" [(ngModel)]="fraseDestaque" > </textarea>
+        <label for="text_frase" class="active">Frase</label>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a class=" modal-action modal-close waves-effect waves-green btn-flat" (click)="saveDestaque()" >Salvar</a>
+  </div>
+</div>
+        

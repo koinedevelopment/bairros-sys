@@ -1,0 +1,59 @@
+<div class="row">
+  <div class="col s12 m6 offset-m3 l4 offset-l4">
+    <div>
+      <h4 class="center-align">Faça seu login</h4>  
+      <form [formGroup]="formLogin" (ngSubmit)="onSubmitLogin()" >
+        <div class="row">
+          <div class="col s12 input-field">
+            <input type="text" id="email" class="validate" [class.invalid]="formLogin.controls.email.invalid && formLogin.controls.email.touched" [class.validate]="formLogin.controls.email.valid" formControlName="email" >
+            <label for="email">Email</label>
+          </div>
+          <div class="col s12 input-field">
+            <input type="password" id="senha" class="validate" formControlName="password" [class.invalid]="formLogin.controls.password.invalid && formLogin.controls.password.touched" [class.validate]="formLogin.controls.password.valid" >
+            <label for="senha">Senha</label>
+          </div>
+          <a class="btn col m5 s12 waves-effect waves-light" href="#modalRegistro" >Registrar-se</a>
+          <button type="submit" [disabled]="this.formLogin.invalid" class="btn col m5 s12 waves-effect waves-light right " >Entrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<div id="modalRegistro" class="modal" >
+    <div class="modal-content">
+      <h4>Registrar-se</h4>
+      <form [formGroup]="formSignup" (ngSubmit)="onSubmitSignup()" >
+        <div class="row">
+          <div class="col s12 input-field">
+            <input type="text" id="email" class="validate" formControlName="email" [class.invalid]="formSignup.controls.email.invalid && formSignup.controls.email.touched" [class.validate]="formSignup.controls.email.valid">
+            <label for="email">Email</label>
+          </div>
+          <div class="col s12 input-field">
+            <input type="text" id="estabelecimento" class="validate" formControlName="estabelecimento" [class.invalid]="formSignup.controls.estabelecimento.invalid && formSignup.controls.estabelecimento.touched" [class.validate]="formSignup.controls.estabelecimento.valid">
+            <label for="estabelecimento">Nome do estabelecimento</label>
+          </div>
+          <div class="row">
+            <div class="col s12 input-field">
+              <select id="categoria" formControlName="categoria" class="browser-default">
+                <option value="" disabled>Categoria</option>
+                <option [value]="categoria.$key" *ngFor="let categoria of categorias">{{categoria.nome}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col s12 input-field">
+            <input type="password" id="senha" class="validate" formControlName="password" [class.invalid]="formSignup.controls.password.invalid && formSignup.controls.password.touched" [class.validate]="formSignup.controls.password.valid" >
+            <label for="senha">Senha</label>
+          </div>
+          <div class="col s12 input-field">
+            <input type="password" id="senha" class="validate" formControlName="password_confirm"  [class.invalid]="formSignup.controls.password_confirm.invalid && formSignup.controls.password_confirm.touched" [class.validate]="formSignup.controls.password_confirm.valid" >
+            <label for="senha">Confirme a senha</label>
+          </div>
+          <button type="submit" [disabled]="this.formSignup.invalid" class="btn col s12 btn-flat right ">Cadastrar conta</button>
+        </div>
+      </form>
+    </div>
+</div>
+
+      
