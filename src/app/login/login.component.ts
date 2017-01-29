@@ -123,7 +123,8 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.fireService.signupEstabelecimento(signup)
         .then(() => {
           this.toast('Usuário criado com sucesso.');
-          this.router.navigate(['estabelecimentos']);
+          jQuery('#modalRegistro').modal('close');
+          this.formSignup.reset();
         })
         .catch(err => {
           if(err['code'] == "auth/email-already-in-use"){
