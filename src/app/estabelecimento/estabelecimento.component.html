@@ -2,10 +2,6 @@
 <hr>
 <br>
 <div class="row">
-  <div class="col s12 m8 offset-m2 l6 offset-l3">
-  </div>
-</div>
-<div class="row">
   <br>
   <h4 class="center-align" >Estabelecimentos cadastrados</h4>
   <div *ngIf="carregando" class="center-align">
@@ -67,6 +63,11 @@
         <textarea class="materialize-textarea" id="text_frase" maxlength="200" [(ngModel)]="fraseDestaque" > </textarea>
         <label for="text_frase" class="active">Frase</label>
       </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12">
+      <button class="btn waves-effect waves-green" (click)="onCadastrarSorteio()" >Cadastrar sorteio </button>
     </div>
   </div>
   <div class="modal-footer">

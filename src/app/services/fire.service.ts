@@ -76,6 +76,10 @@ export class FireService {
         })
     }
 
+    getEstabelecimentoById(id: string): firebase.Promise<any>{
+        return firebase.database().ref('estabelecimentos/'+id).once('value');
+    }
+
     getEstabelecimentos(){
         return this.af.database.list('estabelecimentos');
     }
@@ -120,6 +124,7 @@ export class FireService {
                                         whatsapp: estabelecimento.celular.whatsapp
                                     },
                                     frase: estabelecimento.frase,
+                                    palavras_chave: estabelecimento.palavras_chave,
                                     endereco: estabelecimento.endereco,
                                     localizacao: {
                                         latitude: estabelecimento.localizacao.latitude,
@@ -146,6 +151,7 @@ export class FireService {
                                 whatsapp: estabelecimento.celular.whatsapp
                             },
                             frase: estabelecimento.frase,
+                            palavras_chave: estabelecimento.palavras_chave,
                             endereco: estabelecimento.endereco,
                             localizacao: {
                                 latitude: estabelecimento.localizacao.latitude,
@@ -170,6 +176,7 @@ export class FireService {
                                 whatsapp: estabelecimento.celular.whatsapp
                             },
                             frase: estabelecimento.frase,
+                            palavras_chave: estabelecimento.palavras_chave,
                             endereco: estabelecimento.endereco,
                             localizacao: {
                                 latitude: estabelecimento.localizacao.latitude,
@@ -189,6 +196,7 @@ export class FireService {
                     whatsapp: estabelecimento.celular.whatsapp
                 },
                 frase: estabelecimento.frase,
+                palavras_chave: estabelecimento.palavras_chave,
                 endereco: estabelecimento.endereco,
                 localizacao: {
                     latitude: estabelecimento.localizacao.latitude,
@@ -231,6 +239,33 @@ export class FireService {
             })
     }
     
+
+    saveSorteio(sorteio: any){
+        return firebase.database().ref('sorteios/').push(sorteio);
+    }
+
+    getSorteiosPendentes(): Observable<any> {
+        return this.af.database.list('sorteios', {
+            query: {
+                orderByChild: 'pendente',
+                equalTo: true
+            }
+        });
+    }
+
+    getInscricoes(sorteio){
+        return this.af.database.list('inscricoes', {
+            query: {
+                orderByChild: 'id_sorteio',
+                equalTo: sorteio.$key
+            }
+        });
+    }
+
+
+    confirmarResultadoSorteio(sorteio: any, sorteado: any):firebase.Promise<any>{
+        return this.af.database.list('sorteios/').update(sorteio.$key, {pendente: false, ganhador: sorteado});
+    }
     //AUTENTICAÇÃO
     isLoggedIn(): boolean{
         let user = firebase.auth().currentUser;

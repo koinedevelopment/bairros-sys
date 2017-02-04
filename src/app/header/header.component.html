@@ -6,6 +6,7 @@
           <li><a *ngIf="isAdmin && isAuthenticated" [routerLink] = "['/estabelecimentos']" >Estabelecimentos</a></li>
           <li><a *ngIf="isAdmin && isAuthenticated" [routerLink] = "['/categorias']">Categorias</a></li>
           <li><a *ngIf="isAdmin && isAuthenticated" [routerLink] = "['/destaque']">Destaque</a></li>
+          <li><a *ngIf="isAdmin && isAuthenticated" [routerLink] = "['/sorteios']">Sorteios</a></li>
           <li><a  *ngIf="isAuthenticated" (click)="logout()" >Sair</a></li>
         </div>  
      

@@ -1,3 +1,4 @@
+import { SorteiosComponent } from './sorteios/sorteios.component';
 import { DestaqueComponent } from './destaque/destaque.component';
 import { AdminGuard } from './services/admin.guard';
 import { ClienteGuard } from './services/cliente.guard';
@@ -14,7 +15,9 @@ const appRoutes : Routes = [
     { path: 'cliente', component: ClienteComponent, canActivate: [ClienteGuard] },
     { path: 'estabelecimentos', component: EstabelecimentoComponent, canActivate: [AdminGuard] },
     { path: 'categorias', component: CategoriasComponent, canActivate: [AdminGuard] },
-    { path: 'destaque', component: DestaqueComponent, canActivate: [AdminGuard] }
+    { path: 'destaque', component: DestaqueComponent, canActivate: [AdminGuard] },
+    { path: 'sorteios', component: SorteiosComponent, canActivate: [AdminGuard] },
+    { path: 'sorteios/:id', component: SorteiosComponent, canActivate: [AdminGuard] }
 
 
 ];

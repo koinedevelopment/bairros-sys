@@ -59,6 +59,7 @@ export class ClienteComponent implements OnInit {
               whatsapp: this.estabelecimento.celular.whatsapp
             },
             frase: this.estabelecimento.frase,
+            palavras_chave: this.estabelecimento.palavras_chave,
             endereco: this.estabelecimento.endereco,
             validado: this.estabelecimento.validado
           })
@@ -75,6 +76,7 @@ export class ClienteComponent implements OnInit {
         whatsapp: false
       }),
       frase: '',
+      palavras_chave: '',
       endereco: '',
       localizacao: this.fb.group({
         latitude: '',

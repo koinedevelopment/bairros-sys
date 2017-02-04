@@ -1,0 +1,120 @@
+
+<div class="row">
+  <div class="col s12 m10 offset-m1">
+    <ul class="tabs" style="overflow:hidden" >
+      <li class="tab col s6"><a href="#tab_cadastro">Cadastro</a></li>
+      <li class="tab col s6"><a href="#tab_lista">Lista</a></li>
+    </ul>
+  </div>
+</div>  
+
+<div id="tab_cadastro" class="col s12">
+  <h2 class="center-align">Cadastro de sorteio</h2>
+  <hr>
+  <br>
+  <div class="row">
+    <br>
+    <h4 class="center-align" >Estabelecimentos cadastrados</h4>
+    <div *ngIf="carregando" class="center-align">
+      <img src="assets/rolling1.svg">
+    </div>
+    <div class="col s12 m8 offset-m2">
+      <div class="collection">
+        <a *ngFor="let estabelecimento of estabelecimentos" class="collection-item" (click)="onSelectEstabelecimento(estabelecimento)">
+          <b>{{estabelecimento.nome}}</b>
+          <p style="text-decoration: none">
+            Ativo: {{estabelecimento.validado? 'Sim': 'Não'}}<br>
+            Imagem Adicional: {{estabelecimento.temImagemAdicional? 'Sim': 'Não'}}
+          </p>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col s12" id="tab_lista">
+  <div class="row">
+    <div class="col s12 m8 offset-m2">
+      <div class="collection">
+        <a *ngFor="let sorteio of sorteios" class="collection-item" (click)="onSelectSorteio(sorteio)">
+          <b>{{sorteio.titulo}}</b>
+          <p style="text-decoration: none">
+            <b>Data: {{sorteio.data}}</b>
+          </p>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="sorteioModal" class="modal" >
+  <div class="modal-content" *ngIf="estabelecimento">
+    <h4 (click)="console()" >Cadastro de sorteio</h4>
+    <hr>
+    <br>
+    <div class="row">
+      <div class="input-field col s12">
+        <h5 class="center-align">{{estabelecimento.nome}}</h5>
+        <hr>
+      </div>
+    </div>
+    <form [formGroup]="formSorteio" >
+      <div class="row" >
+        <div class="input-field col s12">
+          <ng2-datepicker id="data" formControlName="obj_data" [options]="{format: 'DD-MM-YYYY'}"></ng2-datepicker>
+          <label class="active" for="data">Data do sorteio</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12 input-field">
+          <input type="text" id="titulo" class="validate" formControlName="titulo" >
+          <label for="titulo">Título</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12 input-field">
+          <textarea class="materialize-textarea" id="text_frase" maxlength="200" formControlName="descricao" > </textarea>
+          <label for="text_frase" class="active">Frase</label>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <a class=" modal-action modal-close waves-effect waves-green btn-flat" (click)="saveSorteio()" >Salvar</a>
+  </div>
+</div>
+
+
+<div id="sortearModal" class="modal" >
+  <div class="modal-content" *ngIf="selectedSorteio">
+    <h4 (click)="console()" >Realizar sorteio</h4>
+    <hr>
+    <br>
+    <div class="row">
+      <div class="input-field col s12">
+        <h5 class="center-align">{{selectedSorteio.titulo}}</h5>
+        <hr>
+      </div>
+    </div>
+    <a class=" modal-action modal-close waves-effect waves-green btn-flat" (click)="sortear()" *ngIf="!sorteado.nome" >Sortear</a>
+
+    <div class="row" *ngIf="sorteado.nome" >
+      <div class="col s12 input-field">
+        <input type="text" id="nome_sorteado" class="validate" disabled [(ngModel)]="sorteado.nome" >
+        <label for="nome_sorteado" class="active">Nome do contemplado</label>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="sorteado.email" >
+      <div class="col s12 input-field">
+        <input type="text" id="email_sorteado" class="validate" disabled [(ngModel)]="sorteado.email" >
+        <label for="email_sorteado" class="active">Nome do contemplado</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <a class=" modal-action modal-close waves-effect waves-green btn-flat" (click)="confirmarSorteio()" >Salvar</a>
+  </div>
+</div>

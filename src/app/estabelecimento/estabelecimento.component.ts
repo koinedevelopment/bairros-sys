@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { FireService } from './../services/fire.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
@@ -18,7 +19,8 @@ export class EstabelecimentoComponent implements OnInit {
   selectedEstabelecimento: any = null;
   destaque: boolean = false;
   fraseDestaque: string = '';
-  constructor(private fb: FormBuilder, private fireService: FireService) { }
+  data: any;
+  constructor(private fb: FormBuilder, private fireService: FireService, private router: Router) { }
 
   ngOnInit() {
     jQuery('.modal').modal({
@@ -74,6 +76,7 @@ export class EstabelecimentoComponent implements OnInit {
       let obj_destaque = { 
         key_estabelecimento: this.selectedEstabelecimento.$key,
         nome_estabelecimento: this.selectedEstabelecimento.nome,
+        imagemCapa: this.selectedEstabelecimento.imagemCapa,
         frase: this.fraseDestaque
       };
       this.fireService.saveDestaque(obj_destaque)
@@ -109,8 +112,11 @@ export class EstabelecimentoComponent implements OnInit {
       })
   }
 
+  onCadastrarSorteio(){
+    this.router.navigate(['sorteios', this.selectedEstabelecimento.$key])
+  }
 
   console(){
-    console.log(this.formEstabelecimento.value);
+    console.log(this.data);
   }
 }

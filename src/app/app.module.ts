@@ -7,6 +7,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AgmCoreModule } from 'angular2-google-maps/core';
+import { DatePickerModule } from 'ng2-datepicker';
 
 import { AppComponent } from './app.component';
 import { AngularFireModule } from 'angularfire2';
@@ -17,6 +18,7 @@ import { TextMaskModule } from 'angular2-text-mask';
 import { ClienteComponent } from './cliente/cliente.component';
 import { LoginComponent } from './login/login.component';
 import { DestaqueComponent } from './destaque/destaque.component';
+import { SorteiosComponent } from './sorteios/sorteios.component';
 
 const config = {
     apiKey: "AIzaSyA3MLge8e6_dGgcYjs8L4MAEeWVTT-QSjE",
@@ -34,7 +36,8 @@ const config = {
     CategoriasComponent,
     ClienteComponent,
     LoginComponent,
-    DestaqueComponent
+    DestaqueComponent,
+    SorteiosComponent
   ],
   imports: [
     BrowserModule,
@@ -43,7 +46,8 @@ const config = {
     routing,
     AngularFireModule.initializeApp(config),
     ReactiveFormsModule,
-    TextMaskModule
+    TextMaskModule,
+    DatePickerModule
   ],
   providers: [
     FireService,
