@@ -136,7 +136,8 @@ export class ClienteComponent implements OnInit {
     let map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: lat, lng: lng},
       zoom: 18,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      
     });
     let latLng: google.maps.LatLng = new google.maps.LatLng(lat, lng);
     this.addMarker(map, latLng)

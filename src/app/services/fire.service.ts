@@ -230,6 +230,7 @@ export class FireService {
             frase: destaque.frase
         });
     }
+
     deleteDestaque(destaque):firebase.Promise<any>{
         return this.af.database.list('estabelecimentos/').update(destaque.key_estabelecimento, {
             destaque: false
@@ -310,7 +311,7 @@ export class FireService {
   signupEstabelecimento(user):Promise<any> {
     let promise: Promise<any>;
     let uid: string;
-    let keyPizzaria: string; 
+
     promise = new Promise((resolve, reject) => {
       this.af.auth.createUser({email: user.email, password: user.password})
         .then(data => {
@@ -335,25 +336,25 @@ export class FireService {
                 latitude: '',
                 longitude: ''
             },
-            telefone: ''
+            telefone: '',
+            palavras_chave: ''
           })
             .then(data2 => {
                 firebase.database().ref('usuarios/'+uid).set({
                     perfil: 'estabelecimento',
                     key_estabelecimento: data2.key
                 })
-                .then(data3 => {
-                    console.log('data2: ', data2);
-                    let key_estabelecimento = data2.key
-                    let obj = { };
-                    obj[key_estabelecimento] = true
-                    firebase.database().ref('categorias_estabelecimentos/'+user.categoria+'/estabelecimentos').set(obj)
+                .then(data => {
+                    resolve(true);
                 })
-                    .then(data => {
-                        resolve(true);
-                    })
             })
-        });
+        })
+        .catch(err => {
+            console.log(err);
+            if(err['code'] == "auth/email-already-in-use"){
+                alert('Esse email já está sendo utilizando em outra conta. Use outro email para se registrar');
+            }
+        })
     })
     
     return promise;
