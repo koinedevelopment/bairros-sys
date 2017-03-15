@@ -14,6 +14,8 @@ export class ClienteComponent implements OnInit {
   categorias: any[];
   markers: any[] = [];
   formEstabelecimento: FormGroup;
+  formInfoGerais: FormGroup;
+  formLocalizacao: FormGroup;
   keyEstabelecimento: string;
   estabelecimento: any;
   zoom: number;
@@ -26,7 +28,10 @@ export class ClienteComponent implements OnInit {
   mapaCarregado: boolean = false;
   imagemCapa: any = null;
   imagemAdicional: any = null;
+  urlImagemCapa: any = null;
+  urlImagemAdicional: any = null;
   temImagemAdicional:boolean = false;
+  loading: boolean = false;
 
   @ViewChild("search") searchElementRef: ElementRef;
 
@@ -40,7 +45,7 @@ export class ClienteComponent implements OnInit {
     this.setCurrentPosition();
     this.zoom = 1;
     jQuery('.modal').modal();
-    
+    jQuery('ul.tabs').tabs();
 
     this.fireService.getCategorias()
       .subscribe(categorias => {
@@ -51,6 +56,21 @@ export class ClienteComponent implements OnInit {
         this.estabelecimento = estabelecimento[0];
         console.log('this.estabelecimento: ', this.estabelecimento);
         if(this.estabelecimento){
+          this.formInfoGerais.patchValue({
+            nome: this.estabelecimento.nome,
+            telefone: this.estabelecimento.telefone,
+            celular: {
+              numero: this.estabelecimento.celular.numero,
+              whatsapp: this.estabelecimento.celular.whatsapp
+            },
+            frase: this.estabelecimento.frase,
+            palavras_chave: this.estabelecimento.palavras_chave
+          });
+          this.formLocalizacao.patchValue({
+            endereco: this.estabelecimento.endereco
+          });
+
+          
           this.formEstabelecimento.patchValue({
             nome: this.estabelecimento.nome,
             telefone: this.estabelecimento.telefone,
@@ -63,10 +83,31 @@ export class ClienteComponent implements OnInit {
             endereco: this.estabelecimento.endereco,
             validado: this.estabelecimento.validado
           })
+          
+          
           this.temImagemAdicional = this.estabelecimento.temImagemAdicional;
         }
           
       })
+      
+    this.formInfoGerais = this.fb.group({
+      nome: ['', Validators.required],
+      telefone: '',
+      celular: this.fb.group({
+        numero: [''],
+        whatsapp: false
+      }),
+      frase: '',
+      palavras_chave: '',
+    });
+
+    this.formLocalizacao = this.fb.group({
+      endereco: '',
+      localizacao: this.fb.group({
+        latitude: '',
+        longitude: ''
+      })
+    });
 
     this.formEstabelecimento = this.fb.group({
       nome: ['', Validators.required],
@@ -115,18 +156,25 @@ export class ClienteComponent implements OnInit {
     
   }
   onChange($event, tipo){
-    console.log($event);
-    console.log(tipo);
+    
     let fileReader: FileReader = new FileReader();
-
+    
     if(tipo === 'capa'){
       this.imagemCapa = $event.srcElement.files[0];
+      fileReader.onload = ($event) => {
+          this.urlImagemCapa = $event.target['result'];
+      }
+
       fileReader.readAsDataURL(this.imagemCapa);
-      console.log(this.imagemCapa);
+
     }
     
     if(tipo === 'adicional'){
+      
       this.imagemAdicional = $event.srcElement.files[0];
+      fileReader.onload = ($event) => {
+          this.urlImagemAdicional = $event.target['result'];
+      }
       fileReader.readAsDataURL(this.imagemAdicional);
       console.log(this.imagemAdicional);
     }
@@ -149,11 +197,11 @@ export class ClienteComponent implements OnInit {
 
   addMarker(map: google.maps.Map, latLng: google.maps.LatLng){
     console.log(latLng.lat());
-    this.formEstabelecimento.controls['localizacao'].setValue({
+    this.formLocalizacao.controls['localizacao'].setValue({
       latitude: latLng.lat(),
       longitude: latLng.lng()
     })
-    console.log(this.formEstabelecimento.controls['localizacao']);
+    console.log(this.formLocalizacao.controls['localizacao']);
     let marker = new google.maps.Marker({
       position: latLng
     })
@@ -206,6 +254,41 @@ export class ClienteComponent implements OnInit {
         console.log(err);
         alert('Ocorreu algum erro. Tente novamente mais tarde');
       })
+  }
+
+  onSubmitInfoGerais(){
+    console.log('Informações gerais: ', this.formInfoGerais);
+    this.fireService.updateEstabelecimentoInfoGerais(this.formInfoGerais.value, this.estabelecimento.$key)
+      .then( _ => {
+        this.toast('Dados alterados');
+      })
+      .catch(err => {
+        console.log(err);
+        alert('Ocorreu algum erro. Tente novamente mais tarde');
+      })
+  }
+  onSubmitImagens(){
+    let imagem = {
+      imagemCapa: this.imagemCapa,
+      imagemAdicional: this.imagemAdicional
+    }
+    this.loading = true;
+    this.fireService.updateImagens(imagem, this.estabelecimento.$key)
+      .then(_ => {
+        this.loading = false;
+        this.toast('Imagens atualizadas');
+      })
+  }
+  onSubmitLocalizacao(){
+    console.log('Informações gerais: ', this.formInfoGerais);
+    this.fireService.updateEstabelecimentoLocalizacao(this.formLocalizacao.value, this.estabelecimento.$key)
+      .then( _ => {
+        this.toast('Dados alterados');
+      })
+      .catch(err => {
+        console.log(err);
+        alert('Ocorreu algum erro. Tente novamente mais tarde');
+      });
   }
 
   console(){

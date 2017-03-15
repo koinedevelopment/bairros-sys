@@ -46,6 +46,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   toast(mensagem: string){
+    console.log('toast');
     Materialize.toast(mensagem, 2000);
   }
 
@@ -108,7 +109,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
   
   onSubmitSignup(){
-    console.log(); 
+    console.log('onSubmitLogin'); 
     if(this.formSignup.value.password != this.formSignup.value.password_confirm){
       alert('As senhas não coincidem.');
       this.formSignup.controls['password_confirm'].reset();

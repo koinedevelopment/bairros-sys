@@ -208,6 +208,71 @@ export class FireService {
 
     }    
     
+    updateEstabelecimentoInfoGerais(estabelecimento: any, key:string){
+        return firebase.database().ref('estabelecimentos/'+key).update({
+                nome: estabelecimento.nome,
+                telefone: estabelecimento.telefone,
+                celular: {
+                    numero: estabelecimento.celular.numero,
+                    whatsapp: estabelecimento.celular.whatsapp
+                },
+                frase: estabelecimento.frase,
+                palavras_chave: estabelecimento.palavras_chave,
+            })
+    }
+
+    updateEstabelecimentoLocalizacao(estabelecimento: any, key:string){
+        return firebase.database().ref('estabelecimentos/'+key).update({
+                endereco: estabelecimento.endereco,
+                localizacao: {
+                    latitude: estabelecimento.localizacao.latitude,
+                    longitude: estabelecimento.localizacao.longitude,
+                }
+            })
+    }
+
+    updateImagens(imagens: any, key: string){
+        console.log(imagens, key);
+        let urlCapa: string = '';
+        let urlAdicional: string = '';
+
+        if(imagens.imagemCapa && imagens.imagemAdicional){
+
+            return firebase.storage().ref('estabelecimentos/'+key+'/imagemCapa.jpg').put(imagens.imagemCapa)
+                .then(result => {
+                    urlCapa = result.downloadURL;
+                    return firebase.storage().ref('estabelecimentos/'+key+'/imagemCapa.jpg').put(imagens.imagemAdicional)
+                            .then(result2 => {
+                                urlAdicional = result2.downloadURL;
+                                return firebase.database().ref('estabelecimentos/'+key).update({
+                                    imagemCapa: urlCapa,
+                                    imagemAdicional: urlAdicional
+                                })
+                            })
+                })
+        }
+        else if(imagens.imagemCapa){
+            return firebase.storage().ref('estabelecimentos/'+key+'/imagemCapa.jpg').put(imagens.imagemCapa)
+                .then(result => {
+                    urlCapa = result.downloadURL;
+                    return firebase.database().ref('estabelecimentos/'+key).update({
+                        imagemCapa: urlCapa
+                    })
+                })
+        }
+
+        else if(imagens.imagemAdicional){
+            return firebase.storage().ref('estabelecimentos/'+key+'/imagemAdicional.jpg').put(imagens.imagemAdicional)
+                .then(result => {
+                    urlCapa = result.downloadURL;
+                    return firebase.database().ref('estabelecimentos/'+key).update({
+                        imagemAdicional: urlCapa
+                    })
+                })
+        }
+
+    }
+
     deleteCategoria(categoria):firebase.Promise<any> {
         return firebase.database().ref('categorias/'+categoria.$key).remove();
     }
