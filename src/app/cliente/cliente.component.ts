@@ -42,7 +42,6 @@ export class ClienteComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.setCurrentPosition();
     this.zoom = 1;
     jQuery('.modal').modal();
     jQuery('ul.tabs').tabs();
@@ -54,7 +53,9 @@ export class ClienteComponent implements OnInit {
     this.fireService.getEstablecimento()
       .subscribe(estabelecimento => { 
         this.estabelecimento = estabelecimento[0];
+        this.setPosition();
         console.log('this.estabelecimento: ', this.estabelecimento);
+
         if(this.estabelecimento){
           this.formInfoGerais.patchValue({
             nome: this.estabelecimento.nome,
@@ -69,21 +70,6 @@ export class ClienteComponent implements OnInit {
           this.formLocalizacao.patchValue({
             endereco: this.estabelecimento.endereco
           });
-
-          
-          this.formEstabelecimento.patchValue({
-            nome: this.estabelecimento.nome,
-            telefone: this.estabelecimento.telefone,
-            celular: {
-              numero: this.estabelecimento.celular.numero,
-              whatsapp: this.estabelecimento.celular.whatsapp
-            },
-            frase: this.estabelecimento.frase,
-            palavras_chave: this.estabelecimento.palavras_chave,
-            endereco: this.estabelecimento.endereco,
-            validado: this.estabelecimento.validado
-          })
-          
           
           this.temImagemAdicional = this.estabelecimento.temImagemAdicional;
         }
@@ -108,22 +94,6 @@ export class ClienteComponent implements OnInit {
         longitude: ''
       })
     });
-
-    this.formEstabelecimento = this.fb.group({
-      nome: ['', Validators.required],
-      telefone: '',
-      celular: this.fb.group({
-        numero: [''],
-        whatsapp: false
-      }),
-      frase: '',
-      palavras_chave: '',
-      endereco: '',
-      localizacao: this.fb.group({
-        latitude: '',
-        longitude: ''
-      })
-    })
   }
 
   toast(mensagem: string){
@@ -152,7 +122,7 @@ export class ClienteComponent implements OnInit {
   openModal(){
     this.setLocation = true;
     jQuery('#modalLocation').modal('open');
-    this.setCurrentPosition();
+    this.setPosition();
     
   }
   onChange($event, tipo){
@@ -180,7 +150,7 @@ export class ClienteComponent implements OnInit {
     }
   }
 
-  setMap(lat:number, lng:number){
+  setMap(lat:number, lng:number, marker?:boolean){
     let map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: lat, lng: lng},
       zoom: 18,
@@ -188,7 +158,8 @@ export class ClienteComponent implements OnInit {
       
     });
     let latLng: google.maps.LatLng = new google.maps.LatLng(lat, lng);
-    this.addMarker(map, latLng)
+    if(marker)
+      this.addMarker(map, latLng)
 
     google.maps.event.addListener(map, 'click', (event) => {
       this.addMarker(map, event.latLng);
@@ -221,8 +192,26 @@ export class ClienteComponent implements OnInit {
   }
 
 
-  private setCurrentPosition() {
-    if ("geolocation" in navigator) {
+  setCurrentPosition(){
+     navigator.geolocation.getCurrentPosition((position) => {
+      
+        this.setMap(position.coords.latitude, position.coords.longitude);
+        this.latitude = position.coords.latitude;
+        this.longitude = position.coords.longitude;
+        this.zoom = 15;
+        this.mapaCarregado = true;
+
+      });
+  }
+  setPosition() {
+    if(this.estabelecimento.localizacao){
+      this.setMap(this.estabelecimento.localizacao.latitude, this.estabelecimento.localizacao.longitude, true);
+      this.latitude = this.estabelecimento.localizacao.latitude;
+      this.longitude = this.estabelecimento.localizacao.longitude;
+      this.zoom = 15;
+      this.mapaCarregado = true;
+    }
+    else if("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
       
         this.setMap(position.coords.latitude, position.coords.longitude);
@@ -272,6 +261,7 @@ export class ClienteComponent implements OnInit {
       imagemCapa: this.imagemCapa,
       imagemAdicional: this.imagemAdicional
     }
+
     this.loading = true;
     this.fireService.updateImagens(imagem, this.estabelecimento.$key)
       .then(_ => {
